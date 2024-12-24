@@ -6,16 +6,12 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from datetime import datetime
 
-# Get today's date
 today_date = datetime.now().strftime('%Y-%m-%d')
 
-# Configure Chrome WebDriver
 options = webdriver.ChromeOptions()
 options.add_argument('--no-sandbox')
 options.add_argument('--disable-dev-shm-usage')
 driver = webdriver.Chrome(options=options)
-
-# Navigate to the IMDb Top 250 page
 driver.get("https://www.imdb.com/chart/top/?ref_=nv_mv_250")
 time.sleep(10)
 
@@ -42,20 +38,17 @@ for table in Tables:
         year, duration, category = "N/A", "N/A", "N/A"
 
     try:
-       
         rate = table.find_element(By.CLASS_NAME, 'ipc-rating-star--rating').text
     except NoSuchElementException:
         rate = "N/A"
 
     try:
-       
         votecount = table.find_element(By.CLASS_NAME, 'ipc-rating-star--voteCount').text
     except NoSuchElementException:
         votecount = "N/A"
 
    
     print(f"{MovieName} | {year} | {rate} | {duration} | {category} | {votecount}")
-
     films.append({
         "MovieName": MovieName,
         "Year": year,
@@ -65,12 +58,8 @@ for table in Tables:
         "VoteCount": votecount,
         "TodayDate" : today_date
     })
-
-
 df = pd.DataFrame(films)
-
 df.to_excel(f"D:\Work\Amazon\IMDb_Top_250.xlsx", index=False)
-
 driver.quit()
 
 
